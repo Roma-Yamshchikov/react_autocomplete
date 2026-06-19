@@ -3,7 +3,6 @@ import './App.scss';
 import { peopleFromServer } from './data/people';
 import { Person } from './types/Person';
 import classNames from 'classnames';
-import { event } from 'cypress/types/jquery';
 
 type Props = {
   delay?: number;
@@ -21,7 +20,7 @@ export const App: React.FC<Props> = ({ delay = 300 }) => {
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, delay]);
 
   const filteredPerson = peopleFromServer.filter(person =>
     person.name.toLocaleLowerCase().includes(appliedQuery.toLocaleLowerCase()),
@@ -39,7 +38,6 @@ export const App: React.FC<Props> = ({ delay = 300 }) => {
             {`${selectedPerson.name} (${selectedPerson.born} - ${selectedPerson.died})`}
           </h1>
         )}
-
         <div className={classNames('dropdown', { 'is-active': isOpen })}>
           <div className="dropdown-trigger">
             <input
@@ -63,7 +61,7 @@ export const App: React.FC<Props> = ({ delay = 300 }) => {
                   className="dropdown-item"
                   data-cy="suggestion-item"
                   key={person.name}
-                  onClick={event => {
+                  onClick={() => {
                     setSelectedPerson(person);
                     setQuery(person.name);
                     setIsOpen(false);
